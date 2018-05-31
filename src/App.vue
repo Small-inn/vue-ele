@@ -17,7 +17,7 @@
     <!-- 3.0 -->
     <!-- <div class="content">content</div> -->
     <keep-alive>
-      <router-view/>
+      <router-view :seller="seller" />
     </keep-alive>
   </div>
 </template>
@@ -27,9 +27,6 @@ import Header from 'base/header/header'
 import { sellerData } from 'api/data'
 const ERR_OK = 0
 export default {
-  props: {
-
-  },
   data() {
     return {
       seller: {}
@@ -42,7 +39,6 @@ export default {
     _sellerData() {
       sellerData().then(res => {
         if (res.data.errno === ERR_OK) {
-          console.log(res.data.data)
           this.seller = res.data.data
         }
       })
@@ -55,7 +51,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '~common/stylus/mixin.styl';
+@import '~common/stylus/mixin.styl'
 
 #app {
   .tab {
