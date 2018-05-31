@@ -21,15 +21,16 @@ export default {
     }
   },
   methods: {
-    addCart() {
+    addCart(event) {
       if (!this.food.count) {
         // vue 的特性
         this.$set(this.food, 'count', 1)
       } else {
         this.food.count++
       }
+      this.$emit('add', event.target)
     },
-    decrease() {
+    decrease(event) {
       if (this.food.count) {
         this.food.count--
       }

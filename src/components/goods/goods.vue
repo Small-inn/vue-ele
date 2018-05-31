@@ -34,7 +34,7 @@
                 </div>
                 <!-- 添加购物车组件 -->
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="foodItem"></cartcontrol>
+                  <cartcontrol @add="addFood" :food="foodItem"></cartcontrol>
                 </div>
               </div>
             </li>
@@ -43,7 +43,7 @@
       </ul>
     </div>
     <!-- 3.0 购物组件 -->
-    <shopcart :selectFoods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :selectFoods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -99,6 +99,9 @@ export default {
     this._goodsData()
   },
   methods: {
+    addFood(target) {
+      this._drop(target)
+    },
     selecItem(index) {
       let foodList = this.$refs.foodList
       let el = foodList[index]
@@ -144,6 +147,12 @@ export default {
         height += item.clientHeight
         this.listHeight.push(height)
       }
+    },
+    // 小球动画
+    _drop(target) {
+      this.$nextTick(() => {
+        this.$refs.shopcart.drop(target)
+      })
     }
   },
   components: {
