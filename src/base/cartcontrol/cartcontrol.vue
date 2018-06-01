@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import Cartcontrol from 'base/cartcontrol/cartcontrol'
 export default {
   props: {
     food: {
@@ -23,7 +24,7 @@ export default {
   methods: {
     addCart(event) {
       if (!this.food.count) {
-        // vue 的特性
+        // vue 的特性,动态添加属性，也要响应式的可以观测
         this.$set(this.food, 'count', 1)
       } else {
         this.food.count++
@@ -35,6 +36,9 @@ export default {
         this.food.count--
       }
     }
+  },
+  components: {
+    Cartcontrol
   }
 }
 </script>

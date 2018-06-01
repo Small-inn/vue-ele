@@ -1,55 +1,59 @@
 <template>
-  <div class="goods">
-    <!-- 1.0 左侧菜单 -->
-    <div class="menu-wrapper" ref="menuWrapper">
-      <ul>
-        <li v-for="(item, index) in goods" class="menu-item" :key="index" :class="{ 'current' : currentIndex === index }" @click="selecItem(index)">
-          <span class="text border-1px">
-            <span v-show="item.type > 0" class="icon" :class="classMap[item.type]"></span>
-            {{item.name}}
-          </span>
-        </li>
-      </ul>
+  <div>
+    <div class="goods">
+      <!-- 1.0 左侧菜单 -->
+      <div class="menu-wrapper" ref="menuWrapper">
+        <ul>
+          <li v-for="(item, index) in goods" class="menu-item" :key="index" :class="{ 'current' : currentIndex === index }" @click="selecItem(index)">
+            <span class="text border-1px">
+              <span v-show="item.type > 0" class="icon" :class="classMap[item.type]"></span>
+              {{item.name}}
+            </span>
+          </li>
+        </ul>
+      </div>
+      <!-- 2.0 右侧食物菜单 -->
+      <div class="foods-wrapper" ref="foodWrapper">
+        <ul>
+          <li v-for="(item, index) in goods" :key="index" class="food-list" ref="foodList">
+            <h1 class="title">{{item.name}}</h1>
+            <ul>
+              <li v-for="(foodItem, index) in item.foods" :key="index" @click="selectFood(foodItem)" class="food-item border-1px">
+                <div class="icon">
+                  <img :src="foodItem.icon" alt="" width="57" height="57">
+                </div>
+                <div class="content">
+                  <div class="name">{{foodItem.name}}</div>
+                  <p class="desc">{{foodItem.description}}</p>
+                  <div class="extra">
+                    <span class="count">月售{{foodItem.sellCount}}份</span>
+                    <span>好评率{{foodItem.rating}}%</span>
+                  </div>
+                  <div class="price">
+                    <span class="now">￥{{foodItem.price}}</span>
+                    <span class="old" v-show="foodItem.oldPrice">￥{{foodItem.oldPrice}}</span>
+                  </div>
+                  <!-- 添加购物车组件 -->
+                  <div class="cartcontrol-wrapper">
+                    <cartcontrol @add="addFood" :food="foodItem"></cartcontrol>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- 3.0 购物车组件 -->
+      <shopcart ref="shopcart" :selectFoods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
     </div>
-    <!-- 2.0 右侧食物菜单 -->
-    <div class="foods-wrapper" ref="foodWrapper">
-      <ul>
-        <li v-for="(item, index) in goods" :key="index" class="food-list" ref="foodList">
-          <h1 class="title">{{item.name}}</h1>
-          <ul>
-            <li v-for="(foodItem, index) in item.foods" :key="index" class="food-item border-1px">
-              <div class="icon">
-                <img :src="foodItem.icon" alt="" width="57" height="57">
-              </div>
-              <div class="content">
-                <div class="name">{{foodItem.name}}</div>
-                <p class="desc">{{foodItem.description}}</p>
-                <div class="extra">
-                  <span class="count">月售{{foodItem.sellCount}}份</span>
-                  <span>好评率{{foodItem.rating}}%</span>
-                </div>
-                <div class="price">
-                  <span class="now">￥{{foodItem.price}}</span>
-                  <span class="old" v-show="foodItem.oldPrice">￥{{foodItem.oldPrice}}</span>
-                </div>
-                <!-- 添加购物车组件 -->
-                <div class="cartcontrol-wrapper">
-                  <cartcontrol @add="addFood" :food="foodItem"></cartcontrol>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-    <!-- 3.0 购物组件 -->
-    <shopcart ref="shopcart" :selectFoods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <food :food="selectedFood" ref="food" @add="addFood"></food>
   </div>
 </template>
 
 <script>
 import Shopcart from 'base/shopcart/shopcart'
 import Cartcontrol from 'base/cartcontrol/cartcontrol'
+import Food from 'base/food/food'
 import { goodsData } from 'api/data'
 import BScroll from 'better-scroll'
 
@@ -68,7 +72,8 @@ export default {
     return {
       goods: [],
       listHeight: [],
-      scrollY: 0
+      scrollY: 0,
+      selectedFood: {}
     }
   },
   computed: {
@@ -99,13 +104,20 @@ export default {
     this._goodsData()
   },
   methods: {
+    // 触发小球动画
     addFood(target) {
       this._drop(target)
     },
+    // 左侧点击，右侧滑动到相应位置
     selecItem(index) {
       let foodList = this.$refs.foodList
       let el = foodList[index]
       this.foodScroll.scrollToElement(el, 300)
+    },
+    // 点击商品详情
+    selectFood(foodItem) {
+      this.$refs.food.show()
+      this.selectedFood = foodItem
     },
     // 数据获取
     _goodsData() {
@@ -157,7 +169,8 @@ export default {
   },
   components: {
     Shopcart,
-    Cartcontrol
+    Cartcontrol,
+    Food
   }
 }
 </script>
