@@ -33,29 +33,66 @@
           </div>
         </transition>
       </div>
+      <!-- 3.0 split -->
+      <split v-show="food.info"></split>
+      <!-- 4.0 -->
+      <div class="info" v-show="food.info">
+        <h1 class="title">商品信息</h1>
+        <p class="text">{{food.info}}</p>
+      </div>
+      <!-- 5.0 -->
+      <split></split>
+      <!-- 6.0 -->
+      <div class="rating">
+        <h1 class="title">商品评价</h1>
+        <ratingselect :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+        <div class="rating-wrapper"></div>
+      </div>
     </div>
   </transition>
 </template>
 
 <script>
+import BScroll from 'better-scroll'
 import Cartcontrol from 'base/cartcontrol/cartcontrol'
+import Split from 'base/split/split'
+import Ratingselect from 'base/ratingselect/ratingselect'
+const ALL = 2
 export default {
   props: {
     food: {
       type: Object,
-      default: function() {
+      default() {
         return {}
       }
     }
   },
   data() {
     return {
-      showFlag: false
+      showFlag: false,
+      selectType: ALL,
+      onlyContent: true,
+      desc: {
+        all: '全部',
+        positive: '推荐',
+        negative: '吐槽'
+      }
     }
   },
   methods: {
     show() {
       this.showFlag = true
+      this.$nextTick(() => {
+        console.log(11)
+        if (!this.foodScroll) {
+          console.log(22)
+          this.foodScroll = new BScroll(this.$refs.food, {
+            click: true
+          })
+        } else {
+          this.foodScroll.refresh()
+        }
+      })
     },
     hide() {
       this.showFlag = false
@@ -69,7 +106,9 @@ export default {
     }
   },
   components: {
-    Cartcontrol
+    Cartcontrol,
+    Split,
+    Ratingselect
   }
 }
 </script>
@@ -161,4 +200,16 @@ export default {
         &.fade-enter, &.fade-leave-active
           opacity 0
           z-index -1
+    .info
+      padding 18px
+      .title
+        line-height 14px
+        margin-bottom 6px
+        font-size 14px
+        color rgb(7, 17, 27)
+      .text
+        line-height 24px
+        padding 0 8px
+        font-size 12px
+        color rgb(77, 85, 93)
 </style>

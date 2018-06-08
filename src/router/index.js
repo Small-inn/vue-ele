@@ -6,7 +6,7 @@ import Seller from 'components/seller/seller'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [{
     path: '/',
     redirect: '/goods'
@@ -21,3 +21,11 @@ export default new Router({
     component: Seller
   }]
 })
+
+router.beforeEach((to, from, next) => {
+  next()
+  document.title = 'ele-mock'
+  window.scroll(0, 0)
+})
+
+export default router

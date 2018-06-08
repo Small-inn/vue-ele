@@ -39,7 +39,7 @@
     <!-- 4.0 浮层 css sticky footer布局-->
     <transition name="fade">
       <div v-show="detailShow" class="detail">
-      <!-- 4.1 文字部分 -->
+        <!-- 4.1 文字部分 -->
         <div class="detail-wrapper clearfix">
           <div class="detail-main">
             <!-- 4.1.1 店名 -->
@@ -73,7 +73,7 @@
             </div>
           </div>
         </div>
-      <!-- 4.2 按钮部分 -->
+        <!-- 4.2 按钮部分 -->
         <div class="detail-close">
           <i class="icon-close" @click="close"></i>
         </div>
@@ -314,6 +314,7 @@ export default {
               padding: 0 12px
               line-height: 24px
               font-size: 12px
+      // css sticky
       .detail-close
         position: relative
         width: 32px
